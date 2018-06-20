@@ -1,0 +1,120 @@
+#!/usr/bin/env python
+import os
+import sys
+import subprocess
+import xml.dom.minidom as xmldom
+from optparse import OptionParser
+
+GIT = 'git'
+USAGE = "repo init -u url -b branch"
+optParser = OptionParser(USAGE)
+optParser.add_option("-u",action = "store",type="string",dest = "url")
+optParser.add_option("-b",action = "store",type="string",dest = "branch")
+#optParser.add_option("-v","--vison", action="store_true", dest="verbose", default='False', help="make lots of noise [default]")
+
+def _print(*objects, **kwargs):
+    sep = kwargs.get('sep', ' ')
+    end = kwargs.get('end', '\n')
+    out = kwargs.get('file', sys.stdout)
+    out.write(sep.join(objects) + end)
+
+class CloneFailure(Exception):
+
+  """Indicate the remote clone of repo itself failed.
+  """
+
+def _Clone(url, local):
+    if not os.path.exists(local):
+        os.mkdir(local)
+    cmd = [GIT, 'clone', '--recursive', url]
+    try:
+        proc = subprocess.Popen(cmd, cwd=local)#get into 'cwd' as workspace before subprocess execute
+    except OSError as e:
+        _print(file=sys.stderr)
+        _print("fatal: '%s' is not available" % GIT, file=sys.stderr)
+        _print('fatal: %s' % e, file=sys.stderr)
+        _print(file=sys.stderr)
+        _print('Please make sure %s is installed and in your path.' % GIT,
+                file=sys.stderr)
+        raise CloneFailure()
+    if proc.wait() != 0:
+        _print('fatal: could not clone %s' % local, file=sys.stderr)
+        raise CloneFailure()
+    else:
+        return True
+
+def _Checkout(branch, dst):
+    return True
+    cmd = [GIT]
+    try:
+        proc = subprocess.Popen(cmd, cwd=local)#get into 'cwd' as workspace before subprocess execute
+    except OSError as e:
+        _print(file=sys.stderr)
+        _print("fatal: '%s' is not available" % GIT, file=sys.stderr)
+        _print('fatal: %s' % e, file=sys.stderr)
+        _print(file=sys.stderr)
+        _print('Please make sure %s is installed and in your path.' % GIT,
+                file=sys.stderr)
+        raise CheckoutFailure()
+    if proc.wait() != 0:
+        _print('fatal: could not clone %s' % local, file=sys.stderr)
+        raise CheckoutFailure()
+    else:
+        return True
+
+def _addSubModule(url, path, branch):
+    print "_addSubModule"
+
+def _addSubTree():
+    print "_addSubTree"
+
+def _ParseXml():
+    xmlfilepath = os.path.abspath("default.xml")
+    domobj = xmldom.parse(xmlfilepath)
+    elementobj = domobj.documentElement
+    subElementObj = elementobj.getElementsByTagName("project")
+    for i in range((len(subElementObj))):
+        print (subElementObj[i].getAttribute("path"))
+        print (subElementObj[i].getAttribute("url"))
+        print (subElementObj[i].getAttribute("branch"))
+    return subElementObj
+    #fakeArgs = ["-u", subElementObj[i].getAttribute("url")]
+    #options, args = optParser.parse_args(fakeArgs)
+    #print options.url
+    #print options.fileName
+    #print options
+    #print args
+    #print optParser.print_help()
+
+def _ParseArguments(args):
+    cmd = None
+    arg = []
+    for i in range(len(args)):
+        a = args[i]
+        if not a.startswith('-'):
+          cmd = a
+          arg = args[i + 1:]
+          break
+    return cmd, arg
+
+def main(orig_args):
+    cmd, _arg = _ParseArguments(orig_args)
+    opt, args = optParser.parse_args(_arg)
+    if args:
+        print False
+        sys.exit(1)
+#    print options.url
+#    print options.branch
+#    remote_repo_name=options.url.split("/")[-1]
+#    local_dir=("project_"+remote_repo_name).split(".")[0]
+#    dst = os.path.abspath(os.path.join(local_dir))
+    dst = os.getcwd()
+    if cmd == 'init':
+        if _Clone(opt.url, dst):
+            _Checkout(opt.branch, dst)
+    else:
+        print False
+        sys.exit(1)
+
+if __name__ == '__main__':
+    main(sys.argv[1:])

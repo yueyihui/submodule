@@ -1,0 +1,4 @@
+<manifest>
+     <project path="com/android/example1" url="" branch=""/>
+     <project path="com/android/example2" url="" branch=""/>
+</manifest>
