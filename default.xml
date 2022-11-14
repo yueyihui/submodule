@@ -1,4 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <manifest>
-     <project path="com/android/example1" url="" branch=""/>
-     <project path="com/android/example2" url="" branch=""/>
+    <remote fetch="git@github.com:yueyihui" name="orignal" review="github.com"/>
+
+    <default remote="orignal" revision="master" sync-c="true" sync-j="3"/>
+
+
+    <project dest-branch="master" name="yueyihui/submodule" path="submodule" upstream="orignal/master"/>
+    <project dest-branch="master" name="yueyihui/bash" path="bash" upstream="orignal/master"/>
 </manifest>
