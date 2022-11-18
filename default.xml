@@ -1,10 +1,17 @@
+<!--
+   -cat .repo/manifests/default.xml | grep '<default remote=' | awk -F' ' '{print $3}' | sed -e '1,$s;^revision="\(.*\)"$;\1;'
+   -->
+
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
-    <remote fetch="git@github.com:yueyihui" name="orignal" review="github.com"/>
+    <remote fetch="git@github.com" name="orignal" review="github.com"/>
 
     <default remote="orignal" revision="master" sync-c="true" sync-j="3"/>
 
+    <project name="yueyihui/submodule" path="src/submodule"/>
 
-    <project dest-branch="master" name="yueyihui/submodule" path="submodule" upstream="orignal/master"/>
-    <project dest-branch="master" name="yueyihui/bash" path="bash" upstream="orignal/master"/>
+    <project revision="main" name="yueyihui/bash" path="etc/bash">
+        <linkfile src="kill_chrome.sh" dest="CMakelist.txt" />
+    </project>
+
 </manifest>
