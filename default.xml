@@ -1,16 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
    -cat .repo/manifests/default.xml | grep '<default remote=' | awk -F' ' '{print $3}' | sed -e '1,$s;^revision="\(.*\)"$;\1;'
    -->
-
-<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   -//upload pub-key
+   -ssh-copy-id -p 5122 -f root@135.252.213.175
+   -->
+<!--
+   -//sudo vim /etc/fstab
+   -sshfs#liayue@135.252.204.94:/home/usr/path /home/lyue/remote fuse allow_other,uid=1000,gid=1000,reconnect,ServerAliveInterval=15,ServerAliveCountMax=3,identityfile=/home/lyue/.ssh/id_rsa 0 0
+   -->
 <manifest>
-    <remote fetch="git@github.com" name="orignal" review="github.com"/>
+    <remote fetch="https://github.com" name="orignal" review="https://github.com"/>
 
     <default remote="orignal" revision="master" sync-c="true" sync-j="3"/>
 
     <project name="yueyihui/submodule" path="src/submodule"/>
 
-    <project revision="main" name="yueyihui/bash" path="etc/bash">
+    <project name="yueyihui/bash" path="etc/bash" revision="main">
         <linkfile src="kill_chrome.sh" dest="CMakelist.txt" />
     </project>
 
